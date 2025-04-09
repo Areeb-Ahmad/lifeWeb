@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Life Journey</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        h1 {
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .form-container {
+            transition: all 0.5s ease-out;
+            max-height: 500px;
+            opacity: 1;
+            overflow: hidden;
+        }
+        
+        .form-container.hidden {
+            max-height: 0;
+            opacity: 0;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+            color: var(--secondary);
+        }
+        
+        input {
+            width: 95%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        input[type="date"] {
+            padding: 0.7rem;
+        }
+        
+        input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            margin: 2rem 0;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-bar {
+            height: 40px;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            border-radius: 10px;
+            width: 0;
+            transition: width 1s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        .result {
+            transition: all 0.5s ease-out;
+            max-height: 1000px;
+            opacity: 1;
+            overflow: hidden;
+        }
+        
+        .result.hidden {
+            max-height: 0;
+            opacity: 0;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .stats {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-align: left;
+        }
+        
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .reset-btn {
+            background: transparent;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+        
+        .reset-btn:hover {
+            background: #f8f9fa;
+            transform: none;
+        }
+        
+        .quote {
+            font-style: italic;
+            margin-top: 2rem;
+            color: #6c757d;
+            border-left: 3px solid var(--primary);
+            padding-left: 1rem;
+        }
+        
+        .loading {
+            display: none;
+            margin: 1rem 0;
+            color: var(--primary);
+        }
+        
+        .last-updated {
+            font-size: 0.8rem;
+            color: #adb5bd;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Life Journey</h1>
+        
+        <div class="form-container {% if percentage %}hidden{% endif %}" id="formContainer">
+            <form method="post" id="lifeForm">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="calculate">
+                <div class="form-group">
+                    <label for="birth_date">Your birth date</label>
+                    <input type="date" id="birth_date" name="birth_date" 
+                           value="{{ birth_date|default:'' }}"
+                           max="{% now 'Y-m-d' %}" required>
+                </div>
+                <div class="form-group">
+                    <label for="life_expectancy">Life expectancy (years)</label>
+                    <input type="number" id="life_expectancy" name="life_expectancy" 
+                           value="{{ life_expectancy|default:'80' }}" 
+                           min="40" max="120" step="0.1" required>
+                </div>
+                <button type="submit">Calculate My Progress</button>
+            </form>
+        </div>
+        
+        <div class="result {% if not percentage %}hidden{% endif %}" id="resultContainer">
+            {% if percentage %}
+            <h2>You've lived <span id="percentageDisplay">{{ percentage|floatformat:2 }}</span>% of your life</h2>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar">{{ percentage|floatformat:2 }}%</div>
+            </div>
+            <div class="stats">
+                <div class="stat-row">
+                    <span>Birth Date:</span>
+                    <span>{{ birth_date }}</span>
+                </div>
+                <div class="stat-row">
+                    <span>Current Age:</span>
+                    <span>{{ current_age }} years ({{ precise_age|floatformat:2 }} precise)</span>
+                </div>
+                <div class="stat-row">
+                    <span>Life Expectancy:</span>
+                    <span>{{ life_expectancy|floatformat:1 }} years</span>
+                </div>
+            </div>
+            <form method="post" id="resetForm">
+                {% csrf_token %}
+                <input type="hidden" name="reset" value="true">
+                <button type="submit" class="reset-btn">Reset Data</button>
+            </form>
+            
+            <div class="quote">
+                "The trouble is, you think you have time." — Buddha
+            </div>
+            
+            <div class="last-updated">
+                Last updated: {% now "F j, Y" %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="loading" id="loadingIndicator">
+            Loading...
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate progress bar
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) {
+                const percentage = parseFloat("{{ percentage|default:0 }}");
+                progressBar.style.width = '0%';
+                setTimeout(() => {
+                    progressBar.style.width = percentage + '%';
+                }, 100);
+            }
+            
+            // Set default date max to today
+            const birthDateInput = document.getElementById('birth_date');
+            if (birthDateInput && !birthDateInput.value) {
+                const today = new Date().toISOString().split('T')[0];
+                birthDateInput.value = today;
+            }
+            
+            // Handle form submission
+            const lifeForm = document.getElementById('lifeForm');
+            if (lifeForm) {
+                lifeForm.addEventListener('submit', function() {
+                    document.getElementById('loadingIndicator').style.display = 'block';
+                });
+            }
+            
+            // Handle reset form submission
+            const resetForm = document.getElementById('resetForm');
+            if (resetForm) {
+                resetForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    // Show loading
+                    document.getElementById('loadingIndicator').style.display = 'block';
+                    
+                    // Hide result container with animation
+                    const resultContainer = document.getElementById('resultContainer');
+                    resultContainer.classList.add('hidden');
+                    
+                    // Wait for animation to complete
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    
+                    // Submit the form
+                    this.submit();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
