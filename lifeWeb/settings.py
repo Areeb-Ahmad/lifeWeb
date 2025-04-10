@@ -25,7 +25,7 @@ SECRET_KEY = "sike, you thought! hahah. I ain't that dumb."
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["silentSigmaMewer"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'progress'
+    'progress',
+    'typingTest'
 ]
 
 MIDDLEWARE = [
@@ -74,7 +75,13 @@ WSGI_APPLICATION = 'lifeWeb.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {}
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": "db.sqlite3",
+    }
+}
+
 
 
 # Password validation

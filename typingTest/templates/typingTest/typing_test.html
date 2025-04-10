@@ -1,0 +1,26 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MonkeyType Clone</title>
+    <link rel="stylesheet" href="{% static 'monkeytype/css/style.css' %}">
+</head>
+<body>
+    <div class="typing-container">
+        <div class="stats">
+            <span id="timer">60</span>
+            <span id="wpm">0 WPM</span>
+            <span id="accuracy">100%</span>
+        </div>
+        
+        <div id="text-display"></div>
+        <input type="text" id="user-input" autocomplete="off" disabled>
+        
+        <button id="restart-btn">Restart</button>
+    </div>
+
+    <script src="{% static 'monkeytype/js/typingEngine.js' %}"></script>
+    <script src="{% static 'monkeytype/js/main.js' %}"></script>
+</body>
+</html>
