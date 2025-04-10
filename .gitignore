@@ -1,1 +1,72 @@
-lifeWeb/settings.py
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+/media/
+/staticfiles/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.py,cover
+.env
+.venv
+venv/
+ENV/
+env/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Build & Distribution
+build/
+dist/
+*.egg-info/
+*.egg
+*.manifest
+*.spec
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+/instance/
+
+# macOS
+.DS_Store
+._*
+
+# Windows
+[Tt]humbs.db
+Desktop.ini
+
+# VS Code
+.vscode/settings.json
+!.vscode/settings.json.example  # Keep example configs
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Debug files
+debug.log
+*.pot
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
